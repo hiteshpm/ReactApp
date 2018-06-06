@@ -18,20 +18,21 @@ class SearchBar extends Component{
   render(){
     return(
       //  <input  onChange={event => console.log(event.target.value)} />   //create new Input element and set  onChange property with value  this.onInputChange.so we passed evenhandler to input element
-     <div>
-      <input  
+     <div className="search-bar">
+      <input
       value = {this.state.term}
-      onChange={event => this.setState({ term: event.target.value})} /> 
+      //whenever input will change it will call onInputChange with new value
+      onChange={event => this.onInputChange( event.target.value)} /> 
       {/* Value of the  input: {this.state.term}                  */}    
      </div>  
     );
   }
 
-  // onInputChange(event){
+  onInputChange(term){
 
-  //   console.log(event.target.value);
-  //   //console.log(event);
-  // }
+    this.setState({term}) //set state with term
+    this.props.onSearchTermChange(term);  //calling callback from App
+  }
 }
 
 export default SearchBar;

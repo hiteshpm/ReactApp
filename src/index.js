@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React,{Component} from 'react';
 import ReactDOM from 'react-dom';
 import YTSearch from 'youtube-api-search';
@@ -19,20 +20,26 @@ class App extends Component {
       selectedVideo:null
     };           
   
-    YTSearch(
-      {key: API_KEY, term: 'surfboards'}, (videos) => {       //when first time app pops up user will get some list of videos.we set state to data(list of videos)
-      this.setState({ 
-        videos:videos,                              //here key is videos and values is data for setState.
-        selectedVideo:videos[0]     //we need to play first video in search result
-      });   
-      console.log(videos);                                   
-   });                                  
+      this.videoSearch('surfboards');  //initial search                               
 }
   
+videoSearch(term){
+  YTSearch(
+    {key: API_KEY, term: term }, (videos) => {       //when first time app pops up user will get some list of videos.we set state to data(list of videos)
+    this.setState({ 
+      videos:videos,                              //here key is videos and values is data for setState.
+      selectedVideo:videos[0]     //we need to play first video in search result
+    });   
+    console.log(videos);                                   
+ }); 
+}
+
 render(){
+ const videoSearch = _.debounce( (term) => {this.videoSearch(term) } , 300);
+
   return(
     <div>
-        <SearchBar />
+        <SearchBar onSearchTermChange={videoSearch }/>
         <VideoDetail video={this.state.selectedVideo} />
         <VideoList 
            onVideoSelect={selectedVideo => this.setState({selectedVideo})}  //callback function takes a video and update state on app and it update the selected videos.
